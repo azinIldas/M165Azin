@@ -1,18 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace SkiService_Backend.Models;
+
 /// <summary>
 /// Model für die Mitarbeiter registration
-/// Wurde mit dem Database first konzept generiert
+/// Angepasst für die Verwendung mit MongoDB.
 /// </summary>
-public partial class UserInfo
+public class UserInfo
 {
-    public int Id { get; set; }
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string Id { get; set; }
 
-    public string UserName { get; set; } = null!;
+    [BsonElement("userName")]
+    public string UserName { get; set; }
 
-    public string? Password { get; set; }
+    [BsonElement("password")]
+    public string Password { get; set; }
 
-    public virtual ICollection<UserSession> UserSessions { get; set; } = new List<UserSession>();
 }

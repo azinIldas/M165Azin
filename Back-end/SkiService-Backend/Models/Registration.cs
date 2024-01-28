@@ -1,39 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace SkiService_Backend.Models;
 
-/// <summary>
-/// Model für die Regestrierung neuer Aufträge
-/// Wurde mit dem Database first konzept generiert
-/// </summary>
-public partial class Registration
+public class Registration
 {
-    public int Id { get; set; }
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string Id { get; set; }
 
-    [Required]
-    public string Name { get; set; } = null!;
+    [BsonElement("name")]
+    public string Name { get; set; }
 
-    [Required]
-    [EmailAddress]
-    public string Email { get; set; } = null!;
+    [BsonElement("email")]
+    public string Email { get; set; }
 
-    [Required]
-    [Phone]
-    public string Tel { get; set; } = null!;
+    [BsonElement("tel")]
+    public string Tel { get; set; }
 
-    [Required]
-    public string Priority { get; set; } = null!;
+    [BsonElement("priority")]
+    public string Priority { get; set; }
 
-    [Required]
-    public string Service { get; set; } = null!;
+    [BsonElement("service")]
+    public string Service { get; set; }
 
+    [BsonElement("startDate")]
     public DateTime? StartDate { get; set; }
 
+    [BsonElement("finishDate")]
     public DateTime FinishDate { get; set; }
 
+    [BsonElement("status")]
     public string? Status { get; set; }
 
+    [BsonElement("note")]
     public string? Note { get; set; }
 }

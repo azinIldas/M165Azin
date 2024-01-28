@@ -1,19 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace SkiService_Backend.Models;
+
 /// <summary>
-/// Model für sessions der mitarbeiter
-/// Wurde mit dem Database first konzept generiert
+/// Model für sessions der Mitarbeiter.
+/// Angepasst für die Verwendung mit MongoDB.
 /// </summary>
-
-public partial class UserSession
+public class UserSession
 {
-    public int Id { get; set; }
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string Id { get; set; }
 
-    public string? SessionKey { get; set; }
+    [BsonElement("sessionKey")]
+    public string SessionKey { get; set; }
 
-    public int? UserId { get; set; }
-
-    public virtual UserInfo? User { get; set; }
+    // Für die Referenzierung zu einem User-Dokument speichern Sie die ObjectId des Users.
+    // Dies entspricht einer ForeignKey-Beziehung in relationalen Datenbanken.
+    [BsonElement("userId")]
+    public string UserId { get; set; }
+    
 }

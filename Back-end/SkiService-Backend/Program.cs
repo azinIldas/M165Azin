@@ -1,25 +1,23 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SkiService_Backend.Models;
+using MongoDB.Driver;
 using System.Text;
 
 namespace SkiService_Backend
 {
     public class Program
     {
-        public static string _connectionString;
-
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // Add services to the container.
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-
-            //Cors einstellung um API verfügbarkeit auf unsere Website zu beschränken
+            // Configure CORS
             builder.Services.AddCors(options =>
             {
                 options.AddDefaultPolicy(
@@ -31,12 +29,14 @@ namespace SkiService_Backend
                     });
             });
 
-            // Datenbank connectionstring konfiguration
-            var configuration = builder.Configuration;
-            _connectionString = configuration.GetConnectionString("Db1");
-            builder.Services.AddDbContext<registrationContext>(options =>
-                options.UseSqlServer(_connectionString));
+            // Configure MongoDB
+            var mongoDbSettings = builder.Configuration.GetSection("MongoDbSettings");
+            builder.Services.AddSingleton<IMongoClient>(ServiceProvider =>
+            {
+                return new MongoClient(mongoDbSettings["ConnectionString"]);
+            });
 
+            // Configure Authentication
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -58,23 +58,19 @@ namespace SkiService_Backend
 
             var app = builder.Build();
 
-            //swagger implementierung
+            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
 
-            if (!app.Environment.IsDevelopment())
-            {
-                app.UseHttpsRedirection();
-            }
-
-
             app.UseHttpsRedirection();
             app.UseCors();
+            app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
+
             app.Run();
         }
     }

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Github\\ProjektarbeitModul322\\skiService-UserInterface\\skiService-UserInterface\\Back-end\\SkiService-Backend\\SkiService-Backend.csproj": {}
+    "C:\\Github\\M165Projekt\\M165Azin\\Back-end\\SkiService-Backend\\SkiService-Backend.csproj": {}
   },
   "projects": {
-    "C:\\Github\\ProjektarbeitModul322\\skiService-UserInterface\\skiService-UserInterface\\Back-end\\SkiService-Backend\\SkiService-Backend.csproj": {
+    "C:\\Github\\M165Projekt\\M165Azin\\Back-end\\SkiService-Backend\\SkiService-Backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Github\\ProjektarbeitModul322\\skiService-UserInterface\\skiService-UserInterface\\Back-end\\SkiService-Backend\\SkiService-Backend.csproj",
+        "projectUniqueName": "C:\\Github\\M165Projekt\\M165Azin\\Back-end\\SkiService-Backend\\SkiService-Backend.csproj",
         "projectName": "SkiService-Backend",
-        "projectPath": "C:\\Github\\ProjektarbeitModul322\\skiService-UserInterface\\skiService-UserInterface\\Back-end\\SkiService-Backend\\SkiService-Backend.csproj",
+        "projectPath": "C:\\Github\\M165Projekt\\M165Azin\\Back-end\\SkiService-Backend\\SkiService-Backend.csproj",
         "packagesPath": "C:\\Users\\azini\\.nuget\\packages\\",
-        "outputPath": "C:\\Github\\ProjektarbeitModul322\\skiService-UserInterface\\skiService-UserInterface\\Back-end\\SkiService-Backend\\obj\\",
+        "outputPath": "C:\\Github\\M165Projekt\\M165Azin\\Back-end\\SkiService-Backend\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -57,23 +57,13 @@
               "target": "Package",
               "version": "[5.1.2, )"
             },
-            "Microsoft.EntityFrameworkCore": {
-              "target": "Package",
-              "version": "[7.0.13, )"
-            },
-            "Microsoft.EntityFrameworkCore.SqlServer": {
-              "target": "Package",
-              "version": "[7.0.13, )"
-            },
-            "Microsoft.EntityFrameworkCore.Tools": {
-              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
-              "suppressParent": "All",
-              "target": "Package",
-              "version": "[7.0.13, )"
-            },
             "Microsoft.IdentityModel.Tokens": {
               "target": "Package",
               "version": "[7.0.3, )"
+            },
+            "MongoDB.Driver": {
+              "target": "Package",
+              "version": "[2.23.1, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",

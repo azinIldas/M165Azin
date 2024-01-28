@@ -1,0 +1,16 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\.github",
+    "\\Back-end",
+    "\\Back-end\\SkiService-Backend",
+    "\\Back-end\\SkiService-Backend\\bin",
+    "\\Back-end\\SkiService-Backend\\bin\\Debug",
+    "\\Back-end\\SkiService-Backend\\bin\\Release",
+    "\\Back-end\\SkiService-Backend\\Controllers",
+    "\\Back-end\\SkiService-Backend\\Models",
+    "\\DatenbankImports"
+  ],
+  "SelectedNode": "\\.gitignore",
+  "PreviewInSolutionExplorer": false
+}

@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using SkiService_Backend.Models;
+using MongoDB.Driver;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 namespace SkiService_Backend.Controllers
 {
@@ -8,30 +10,27 @@ namespace SkiService_Backend.Controllers
     [ApiController]
     public class mitarbeiterController : ControllerBase
     {
-        private readonly registrationContext _context;
+        private readonly MongoDbContext _context;
         private readonly IConfiguration _configuration;
 
-
-        public mitarbeiterController(registrationContext context, IConfiguration configuration)
+        public mitarbeiterController(MongoDbContext context, IConfiguration configuration)
         {
             _context = context;
             _configuration = configuration;
         }
 
-        /// <summary>
-        /// Verweis auf mitarbeiterdmodel wobei ein JTW Mitgegeben werden soll
-        /// </summary>
-        /// <param name="mitarbeiterModel">JWToken</param>
-        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> PostDashboard([FromBody] mitarbeitermodel dashboardModel)
         {
-            var userSession =  await _context.UserSessions
-                                            .FirstOrDefaultAsync(us => us.SessionKey == dashboardModel.Token);
+            var userSession = await _context.UserSessions
+                                            .Find(us => us.SessionKey == dashboardModel.Token)
+                                            .FirstOrDefaultAsync();
 
             if (userSession != null)
             {
-                var registrations = await _context.Registrations.ToListAsync();
+                var registrations = await _context.Registrations
+                                                  .Find(_ => true)
+                                                  .ToListAsync();
                 return Ok(registrations);
             }
             else
@@ -40,83 +39,57 @@ namespace SkiService_Backend.Controllers
             }
         }
 
-        /// <summary>
-        /// Eine bestimmte ID einer registration wird abgesucht und verändert, zusätzlich muss ein Gültiger JWT Vorliegen
-        /// </summary>
-        /// <param name="id">Object ID</param>
-        /// <param name="registration">Registration</param>
-        /// <param name="token">JWToken</param>
-        /// <returns></returns>
         [HttpPut("registration/{id}")]
-        public async Task<IActionResult> PutRegistration(int id, [FromBody] Registration registration, string token)
+        public async Task<IActionResult> PutRegistration(string id, [FromBody] Registration registration, string token)
         {
-            // Token authentication
-            var userSession = await _context.UserSessions.FirstOrDefaultAsync(us => us.SessionKey == token);
+            var userSession = await _context.UserSessions
+                                            .Find(us => us.SessionKey == token)
+                                            .FirstOrDefaultAsync();
             if (userSession == null)
             {
                 return BadRequest("Invalid session token");
             }
 
-            if (id != registration.Id)
-            {
-                return BadRequest();
-            }
+            var filter = Builders<Registration>.Filter.Eq(r => r.Id, id);
+            var updateResult = await _context.Registrations
+                                             .ReplaceOneAsync(filter, registration, new ReplaceOptions { IsUpsert = true });
 
-            _context.Entry(registration).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-                return Ok(registration);
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!_context.Registrations.Any(r => r.Id == id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        /// <summary>
-        /// Eine bestimmte ID wird gelöscht, zusätzlich muss ein Gültiger JWT vorliegen
-        /// </summary>
-        /// <param name="id">ID</param>
-        /// <param name="token">JWToken</param>
-        /// <returns></returns>
-        [HttpDelete("registration/{id}")]
-        public async Task<IActionResult> DeleteRegistration(int id, string token)
-        {
-            // Token authentication
-            var userSession = await _context.UserSessions.FirstOrDefaultAsync(us => us.SessionKey == token);
-            if (userSession == null)
-            {
-                return BadRequest("Invalid session token");
-            }
-
-            var registration = await _context.Registrations.FindAsync(id);
-            if (registration == null)
+            if (updateResult.IsAcknowledged && updateResult.ModifiedCount == 0)
             {
                 return NotFound();
             }
 
-            _context.Registrations.Remove(registration);
-            await _context.SaveChangesAsync();
+            return Ok(registration);
+        }
+
+        [HttpDelete("registration/{id}")]
+        public async Task<IActionResult> DeleteRegistration(string id, string token)
+        {
+            var userSession = await _context.UserSessions
+                                            .Find(us => us.SessionKey == token)
+                                            .FirstOrDefaultAsync();
+            if (userSession == null)
+            {
+                return BadRequest("Invalid session token");
+            }
+
+            var filter = Builders<Registration>.Filter.Eq(r => r.Id, id);
+            var deleteResult = await _context.Registrations.DeleteOneAsync(filter);
+
+            if (deleteResult.IsAcknowledged && deleteResult.DeletedCount == 0)
+            {
+                return NotFound();
+            }
 
             return NoContent();
         }
 
-        private bool RegistrationExists(int id)
+        private async Task<bool> RegistrationExists(string id)
         {
-            return _context.Registrations.Any(e => e.Id == id);
+            var registration = await _context.Registrations
+                                             .Find(r => r.Id == id)
+                                             .FirstOrDefaultAsync();
+            return registration != null;
         }
-
-
     }
 }

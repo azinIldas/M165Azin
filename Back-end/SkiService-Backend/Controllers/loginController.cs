@@ -1,35 +1,31 @@
-﻿using Azure;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using SkiService_Backend.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using MongoDB.Driver;
+using System.Threading.Tasks;
+
 namespace SkiService_Backend.Controllers
 {
     [Route("api/login")]
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
-        private readonly registrationContext _context;
+        private readonly MongoDbContext _context;
         private readonly IConfiguration _configuration;
 
-        public AuthenticationController(registrationContext context, IConfiguration configuration)
+        public AuthenticationController(MongoDbContext context, IConfiguration configuration)
         {
             _context = context;
             _configuration = configuration;
         }
 
-        /// <summary>
-        /// Die informationen für das Loginmodel müssein eingegeben werden und werden überprüft, bei korrekter eingabe wird ein JWT zurückgegeben der zusätzlich in UserSessions gespeichert wird
-        /// </summary>
-        /// <param name="loginModel"></param>
-        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<string>> PostLogin(LoginModel loginModel)
         {
-            var userInfo = await _context.UserInfos.FirstOrDefaultAsync(u => u.UserName == loginModel.UserName);
+            var userInfo = await _context.UserInfos.Find(u => u.UserName == loginModel.UserName).FirstOrDefaultAsync();
 
             if (userInfo != null && userInfo.Password == loginModel.Password)
             {
@@ -37,11 +33,9 @@ namespace SkiService_Backend.Controllers
                 var userSession = new UserSession
                 {
                     SessionKey = token,
-                    UserId = userInfo.Id,
+                    UserId = userInfo.Id.ToString(), // Stellen Sie sicher, dass die UserId als String gespeichert wird
                 };
-                _context.UserSessions.Add(userSession);
-    
-                _context.SaveChanges();
+                await _context.UserSessions.InsertOneAsync(userSession); // Verwenden von InsertOneAsync für MongoDB
 
                 return Ok(token);
             }
@@ -51,11 +45,6 @@ namespace SkiService_Backend.Controllers
             }
         }
 
-        /// <summary>
-        /// Generierung des JWT
-        /// </summary>
-        /// <param name="userInfo">Nutzerinformationen aus der Datenbank</param>
-        /// <returns></returns>
         private string GenerateJwtToken(UserInfo userInfo)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));

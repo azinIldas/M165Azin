@@ -36,6 +36,13 @@ namespace SkiService_Backend
                 return new MongoClient(mongoDbSettings["ConnectionString"]);
             });
 
+            builder.Services.AddScoped<MongoDbContext>(sp =>
+            {
+                var mongoClient = sp.GetRequiredService<IMongoClient>();
+                var databaseName = mongoDbSettings["M165Azin"];
+                return new MongoDbContext(mongoClient, databaseName);
+            });
+
             // Configure Authentication
             builder.Services.AddAuthentication(options =>
             {

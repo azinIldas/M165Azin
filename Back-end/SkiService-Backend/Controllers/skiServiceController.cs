@@ -1,40 +1,30 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
 using SkiService_Backend.Models;
-
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 [Route("api/[controller]")]
 [ApiController]
 public class RegistrationController : ControllerBase
 {
-    private readonly registrationContext _context;
+    private readonly MongoDbContext _context;
 
-    public RegistrationController(registrationContext context)
+    public RegistrationController(MongoDbContext context)
     {
         _context = context;
     }
 
-    /// <summary>
-    /// Basic Get API endpoint
-    /// </summary>
-    /// <returns></returns>
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Registration>>> GetRegistrations()
     {
-        return await _context.Registrations.ToListAsync();
+        return await _context.Registrations.Find(_ => true).ToListAsync();
     }
 
-    /// <summary>
-    /// Basic get by ID endpoint
-    /// </summary>
-    /// <param name="id">ID</param>
-    /// <returns></returns>
     [HttpGet("{id}")]
-    public async Task<ActionResult<Registration>> GetRegistration(int id)
+    public async Task<ActionResult<Registration>> GetRegistration(string id)
     {
-        var registration = await _context.Registrations.FindAsync(id);
+        var registration = await _context.Registrations.Find(r => r.Id == id).FirstOrDefaultAsync();
 
         if (registration == null)
         {
@@ -44,93 +34,49 @@ public class RegistrationController : ControllerBase
         return registration;
     }
 
-    /// <summary>
-    /// Basic Post Endpoint um neue Aufträge zu Regestrieren
-    /// </summary>
-    /// <param name="registration">Registration model Informationen</param>
-    /// <returns></returns>
     [HttpPost]
     public async Task<ActionResult<Registration>> PostRegistration(Registration registration)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-        if (registration.Status != "Unfinished")
-        {
-            return BadRequest("Status must be 'Unfinished'");
-        }
-        if (registration.Note != "")
-        {
-            return BadRequest("Note must be an empty string");
-        }
-
-        _context.Registrations.Add(registration);
-        await _context.SaveChangesAsync();
-
+        await _context.Registrations.InsertOneAsync(registration);
         return CreatedAtAction(nameof(GetRegistration), new { id = registration.Id }, registration);
     }
 
-
-    /// <summary>
-    /// Put endpoint um daten zu bearbeiten, hier ohne JWT überprüfung
-    /// </summary>
-    /// <param name="id">ID</param>
-    /// <param name="registration">Registration model Informationen</param>
-    /// <returns></returns>
     [HttpPut("{id}")]
-    public async Task<IActionResult> PutRegistration(int id, Registration registration)
+    public async Task<IActionResult> PutRegistration(string id, Registration registration)
     {
         if (id != registration.Id)
         {
             return BadRequest();
         }
 
-        _context.Entry(registration).State = EntityState.Modified;
-
-        try
+        var result = await _context.Registrations.ReplaceOneAsync(r => r.Id == id, registration);
+        if (result.IsAcknowledged && result.ModifiedCount > 0)
         {
-            await _context.SaveChangesAsync();
+            return NoContent();
         }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!RegistrationExists(id))
-            {
-                return NotFound();
-            }
-            else
-            {
-                throw;
-            }
-        }
-
-        return NoContent();
-    }
-
-
-    /// <summary>
-    /// Basic Delete endpoint, hier ohne JWT übrprüfung
-    /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteRegistration(int id)
-    {
-        var registration = await _context.Registrations.FindAsync(id);
-        if (registration == null)
+        else
         {
             return NotFound();
         }
-
-        _context.Registrations.Remove(registration);
-        await _context.SaveChangesAsync();
-
-        return NoContent();
     }
 
-    private bool RegistrationExists(int id)
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteRegistration(string id)
     {
-        return _context.Registrations.Any(e => e.Id == id);
+        var result = await _context.Registrations.DeleteOneAsync(r => r.Id == id);
+
+        if (result.IsAcknowledged && result.DeletedCount > 0)
+        {
+            return NoContent();
+        }
+        else
+        {
+            return NotFound();
+        }
     }
 
+    private bool RegistrationExists(string id)
+    {
+        return _context.Registrations.Find(r => r.Id == id).Any();
+    }
 }

@@ -3,6 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using SkiService_Backend.Models;
 using MongoDB.Driver;
 using System.Text;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace SkiService_Backend
 {
@@ -33,7 +34,7 @@ namespace SkiService_Backend
             var mongoDbSettings = builder.Configuration.GetSection("MongoDbSettings");
             builder.Services.AddSingleton<IMongoClient>(ServiceProvider =>
             {
-                return new MongoClient(mongoDbSettings["ConnectionString"]);
+                return new MongoClient(mongoDbSettings["mongodb://localhost:27017/M165Azin"]);
             });
 
             builder.Services.AddScoped<MongoDbContext>(sp =>

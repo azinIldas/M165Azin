@@ -13,6 +13,9 @@ public class UserInfo
     [BsonRepresentation(BsonType.ObjectId)]
     public string Id { get; set; }
 
+    [BsonElement("ID")]
+    public int CustomId { get; set; }
+
     [BsonElement("userName")]
     public string UserName { get; set; }
 

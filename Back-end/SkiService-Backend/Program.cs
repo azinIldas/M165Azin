@@ -4,6 +4,7 @@ using SkiService_Backend.Models;
 using MongoDB.Driver;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
+using SkiService_Backend.Services;
 
 namespace SkiService_Backend
 {
@@ -22,6 +23,7 @@ namespace SkiService_Backend
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddScoped<TokenService>();
 
             // Configure CORS
             builder.Services.AddCors(options =>

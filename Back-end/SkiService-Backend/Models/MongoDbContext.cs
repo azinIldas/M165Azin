@@ -12,9 +12,9 @@ namespace SkiService_Backend.Models
             _database = client.GetDatabase(databaseName);
         }
 
-        public IMongoCollection<Registration> Registrations => _database.GetCollection<Registration>("Registrations");
-        public IMongoCollection<UserInfo> UserInfos => _database.GetCollection<UserInfo>("UserInfos");
-        public IMongoCollection<UserSession> UserSessions => _database.GetCollection<UserSession>("UserSessions");
+        public IMongoCollection<Registration> Registrations => _database.GetCollection<Registration>("registrations");
+        public IMongoCollection<UserInfo> UserInfos => _database.GetCollection<UserInfo>("userInfos");
+        public IMongoCollection<UserSession> UserSessions => _database.GetCollection<UserSession>("userSessions");
 
     }
 }

@@ -13,6 +13,11 @@ namespace SkiService_Backend
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // MongoDBsettings verbinden
+            builder.Services.Configure<MongoDbSettings>(
+                builder.Configuration.GetSection("MongoDbSettings")
+            );
+
             // Add services to the container.
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
@@ -31,18 +36,18 @@ namespace SkiService_Backend
             });
 
             // Configure MongoDB
-            var mongoDbSettings = builder.Configuration.GetSection("MongoDbSettings");
+            var mongoDbSettings = builder.Configuration.GetSection("MongoDbSettings").Get<MongoDbSettings>();
             builder.Services.AddSingleton<IMongoClient>(ServiceProvider =>
             {
-                return new MongoClient(mongoDbSettings["mongodb://localhost:27017/M165Azin"]);
+                return new MongoClient(mongoDbSettings.ConnectionString); 
             });
 
             builder.Services.AddScoped<MongoDbContext>(sp =>
             {
                 var mongoClient = sp.GetRequiredService<IMongoClient>();
-                var databaseName = mongoDbSettings["M165Azin"];
-                return new MongoDbContext(mongoClient, databaseName);
+                return new MongoDbContext(mongoClient, mongoDbSettings.DatabaseName); 
             });
+
 
             // Configure Authentication
             builder.Services.AddAuthentication(options =>

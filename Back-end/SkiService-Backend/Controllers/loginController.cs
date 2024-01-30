@@ -33,9 +33,9 @@ namespace SkiService_Backend.Controllers
                 var userSession = new UserSession
                 {
                     SessionKey = token,
-                    UserId = userInfo.Id.ToString(), // Stellen Sie sicher, dass die UserId als String gespeichert wird
+                    UserId = userInfo.Id.ToString(), 
                 };
-                await _context.UserSessions.InsertOneAsync(userSession); // Verwenden von InsertOneAsync für MongoDB
+                await _context.UserSessions.InsertOneAsync(userSession);
 
                 return Ok(token);
             }

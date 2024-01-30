@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
+using SkiService_Backend.DTOs.Requests;
 using SkiService_Backend.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -35,11 +36,25 @@ public class RegistrationController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Registration>> PostRegistration(Registration registration)
+    public async Task<IActionResult> CreateRegistration([FromBody] RegistrationDto registrationDto)
     {
+        var registration = new Registration
+        {
+            Name = registrationDto.Name,
+            Email = registrationDto.Email,
+            Tel = registrationDto.Tel,
+            Priority = registrationDto.Priority,
+            Service = registrationDto.Service,
+            StartDate = registrationDto.StartDate,
+            FinishDate = (DateTime)registrationDto.FinishDate,
+            Status = registrationDto.Status,
+            Note = registrationDto.Note
+        };
+
         await _context.Registrations.InsertOneAsync(registration);
         return CreatedAtAction(nameof(GetRegistration), new { id = registration.Id }, registration);
     }
+
 
     [HttpPut("{id}")]
     public async Task<IActionResult> PutRegistration(string id, Registration registration)

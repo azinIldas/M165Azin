@@ -3,9 +3,14 @@ using SkiService_Backend.Models;
 using MongoDB.Driver;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using SkiService_Backend.DTOs.Requests;
+using SkiService_Backend.DTOs.Responses;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace SkiService_Backend.Controllers
 {
+    [Authorize]
     [Route("api/mitarbeiter")]
     [ApiController]
     public class mitarbeiterController : ControllerBase
@@ -20,24 +25,42 @@ namespace SkiService_Backend.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostDashboard([FromBody] mitarbeitermodel dashboardModel)
+        public async Task<IActionResult> PostDashboard([FromBody] MitarbeiterRequestDto requestDto)
         {
-            var userSession = await _context.UserSessions
-                                            .Find(us => us.SessionKey == dashboardModel.Token)
-                                            .FirstOrDefaultAsync();
+            var userSession = await _context.UserSessions.Find(us => us.SessionKey == requestDto.Token).FirstOrDefaultAsync();
 
             if (userSession != null)
             {
-                var registrations = await _context.Registrations
-                                                  .Find(_ => true)
-                                                  .ToListAsync();
-                return Ok(registrations);
+                var registrations = await _context.Registrations.Find(_ => true).ToListAsync();
+
+                // Konvertieren Sie `registrations` in `RegistrationDto`
+                var registrationDtos = registrations.Select(reg => new RegistrationDto
+                {
+                    Name = reg.Name,
+                    Email = reg.Email,
+                    Tel = reg.Tel,
+                    Priority = reg.Priority,
+                    Service = reg.Service,
+                    StartDate = reg.StartDate,
+                    FinishDate = reg.FinishDate,
+                    Status = reg.Status,
+                    Note = reg.Note
+                }).ToList();
+
+                var response = new MitarbeiterResponseDto
+                {
+                    Registrations = registrationDtos
+                };
+
+                return Ok(response);
             }
             else
             {
                 return BadRequest("Session invalid");
             }
         }
+
+
 
         [HttpPut("registration/{id}")]
         public async Task<IActionResult> PutRegistration(string id, [FromBody] Registration registration, string token)

@@ -31,7 +31,7 @@ public class Registration
     public DateTime? StartDate { get; set; }
 
     [BsonElement("finishDate")]
-    public DateTime FinishDate { get; set; }
+    public DateTime? FinishDate { get; set; }
 
     [BsonElement("status")]
     public string? Status { get; set; }

@@ -63,8 +63,8 @@ public class RegistrationController : ControllerBase
             Tel = registrationDto.Tel,
             Priority = registrationDto.Priority,
             Service = registrationDto.Service,
-            StartDate = registrationDto.StartDate,
-            FinishDate = (DateTime)registrationDto.FinishDate,
+            StartDate = registrationDto.StartDate.HasValue ? registrationDto.StartDate.Value : DateTime.UtcNow, 
+            FinishDate = registrationDto.FinishDate.HasValue ? registrationDto.FinishDate.Value : DateTime.UtcNow, 
             Status = registrationDto.Status,
             Note = registrationDto.Note
         };
@@ -75,17 +75,46 @@ public class RegistrationController : ControllerBase
 
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> PutRegistration(string id, Registration registration)
+    public async Task<IActionResult> PutRegistration(string id, [FromBody] RegistrationUpdateRequestDto updateDto)
     {
-        if (id != registration.Id)
+        var registration = await _context.Registrations.Find(r => r.Id == id).FirstOrDefaultAsync();
+
+        if (registration == null)
         {
-            return BadRequest();
+            return NotFound();
         }
 
+        // Update the registration with the DTO values
+        registration.Name = updateDto.Name;
+        registration.Email = updateDto.Email;
+        registration.Tel = updateDto.Tel;
+        registration.Priority = updateDto.Priority;
+        registration.Service = updateDto.Service;
+        registration.StartDate = updateDto.StartDate;
+        registration.FinishDate = updateDto.FinishDate;
+        registration.Status = updateDto.Status;
+        registration.Note = updateDto.Note;
+
         var result = await _context.Registrations.ReplaceOneAsync(r => r.Id == id, registration);
+
         if (result.IsAcknowledged && result.ModifiedCount > 0)
         {
-            return NoContent();
+            // Create a response DTO
+            var responseDto = new RegistrationUpdateResponseDto
+            {
+                ID = registration.Id,
+                Name = registration.Name,
+                Email = registration.Email,
+                Tel = registration.Tel,
+                Priority = registration.Priority,
+                Service = registration.Service,
+                StartDate = registration.StartDate,
+                FinishDate = registration.FinishDate,
+                Status = registration.Status,
+                Note = registration.Note
+            };
+
+            return Ok(responseDto);
         }
         else
         {

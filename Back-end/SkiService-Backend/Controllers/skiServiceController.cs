@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using SkiService_Backend.DTOs.Requests;
+using SkiService_Backend.DTOs.Responses;
 using SkiService_Backend.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -17,9 +18,26 @@ public class RegistrationController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Registration>>> GetRegistrations()
+    public async Task<ActionResult<IEnumerable<RegistrationResponseDto>>> GetRegistrations()
     {
-        return await _context.Registrations.Find(_ => true).ToListAsync();
+        var registrations = await _context.Registrations.Find(_ => true).ToListAsync();
+
+        // Konvertierung von Registration zu RegistrationResponseDto
+        var registrationDtos = registrations.Select(reg => new RegistrationResponseDto
+        {
+            ID = reg.Id,
+            Name = reg.Name,
+            Email = reg.Email,
+            Tel = reg.Tel,
+            Priority = reg.Priority,
+            Service = reg.Service,
+            StartDate = reg.StartDate,
+            FinishDate = reg.FinishDate,
+            Status = reg.Status,
+            Note = reg.Note
+        }).ToList();
+
+        return Ok(registrationDtos);
     }
 
     [HttpGet("{id}")]

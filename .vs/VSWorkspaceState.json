@@ -4,9 +4,8 @@
     "\\.github",
     "\\Back-end",
     "\\Back-end\\SkiService-Backend",
-    "\\Back-end\\SkiService-Backend\\Controllers",
-    "\\Back-end\\SkiService-Backend\\Models"
+    "\\Back-end\\SkiService-Backend\\DatenbankMigration"
   ],
-  "SelectedNode": "\\Back-end\\SkiService-Backend\\Controllers\\skiServiceController.cs",
+  "SelectedNode": "\\Back-end\\SkiService-Backend\\DatenbankMigration\\registrations.md",
   "PreviewInSolutionExplorer": false
 }

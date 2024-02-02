@@ -131,3 +131,4 @@ C:\Github\M165Projekt\M165Azin\Back-end\SkiService-Backend\obj\Debug\net7.0\scop
 C:\Github\M165Projekt\M165Azin\Back-end\SkiService-Backend\obj\Debug\net7.0\SkiService-Backend.csproj.CopyComplete
 C:\Github\M165Projekt\M165Azin\Back-end\SkiService-Backend\obj\Debug\net7.0\SkiService-Backend.genruntimeconfig.cache
 C:\Github\M165Projekt\M165Azin\Back-end\SkiService-Backend\obj\Debug\net7.0\ref\SkiService-Backend.dll
+C:\Github\M165Projekt\M165Azin\Back-end\SkiService-Backend\bin\Debug\net7.0\PostmanCollection\M165.postman_collection.json

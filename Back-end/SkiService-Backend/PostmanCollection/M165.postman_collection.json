@@ -1,0 +1,267 @@
+{
+	"info": {
+		"_postman_id": "1e5c7f81-fd71-4be8-ab32-40bbc1ac770c",
+		"name": "M165",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29157863"
+	},
+	"item": [
+		{
+			"name": "M165",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userName\": \"admin\",\r\n    \"password\": \"admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:7141/api/login",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7141",
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Mitarbeiter",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"token\": \"string\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:7141/api/mitarbeiter",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7141",
+							"path": [
+								"api",
+								"mitarbeiter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "MitarbeiterRegistration",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": \"65b934c324738bdb82243c03\", \r\n  \"customId\": 0, \r\n  \"name\": \"Aktualisierter Name\", \r\n  \"email\": \"aktualisierte-email@example.com\", \r\n  \"tel\": \"1234567890\", \r\n  \"priority\": \"Hohe Priorität\", \r\n  \"service\": \"Aktualisierter Service\", \r\n  \"startDate\": \"2024-01-31T16:35:54.727Z\", \r\n  \"finishDate\": \"2024-01-31T17:00:00.000Z\", \r\n  \"status\": \"Aktualisierter Status\", \r\n  \"note\": \"Aktualisierte Notiz\" \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:7141/api/mitarbeiter/registration/",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7141",
+							"path": [
+								"api",
+								"mitarbeiter",
+								"registration",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "MitarbeiterRegistration",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": \"65b934c324738bdb82243c03\", \r\n  \"customId\": 0, \r\n  \"name\": \"Aktualisierter Name\", \r\n  \"email\": \"aktualisierte-email@example.com\", \r\n  \"tel\": \"1234567890\", \r\n  \"priority\": \"Hohe Priorität\", \r\n  \"service\": \"Aktualisierter Service\", \r\n  \"startDate\": \"2024-01-31T16:35:54.727Z\", \r\n  \"finishDate\": \"2024-01-31T17:00:00.000Z\", \r\n  \"status\": \"Aktualisierter Status\", \r\n  \"note\": \"Aktualisierte Notiz\" \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:7141/api/mitarbeiter/registration/",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7141",
+							"path": [
+								"api",
+								"mitarbeiter",
+								"registration",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Registration",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"variable_key\", \"variable_value\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Ihr Name\",\r\n  \"email\": \"ihre.email@beispiel.com\",\r\n  \"tel\": \"1234567890\",\r\n  \"priority\": \"Hoch\",\r\n  \"service\": \"Service-Typ\",\r\n  \"startDate\": \"2024-01-31T20:24:19.829Z\",\r\n  \"finishDate\": \"2024-01-31T20:24:19.830Z\",\r\n  \"status\": \"Offen\",\r\n  \"note\": \"Ihre Notiz hier\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:7141/api/Registration",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7141",
+							"path": [
+								"api",
+								"Registration"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Registration",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:7141/api/Registration",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7141",
+							"path": [
+								"api",
+								"Registration"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RegistrationId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:7141/api/Registration/65b934c324738bdb82243c03",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7141",
+							"path": [
+								"api",
+								"Registration",
+								"65b934c324738bdb82243c03"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RegistrationId",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Neuer Name\",\r\n  \"email\": \"neue-email@example.com\",\r\n  \"tel\": \"0123456789\",\r\n  \"priority\": \"Hoch\",\r\n  \"service\": \"Neuer Service\",\r\n  \"startDate\": \"2024-01-31T20:33:37.403Z\",\r\n  \"finishDate\": \"2024-01-31T20:33:37.403Z\",\r\n  \"status\": \"Aktualisiert\",\r\n  \"note\": \"Neue Notiz\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:7141/api/Registration/65b934c324738bdb82243c03",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7141",
+							"path": [
+								"api",
+								"Registration",
+								"65b934c324738bdb82243c03"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RegistrationId",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:7141/api/Registration/65b934c324738bdb82243c03",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7141",
+							"path": [
+								"api",
+								"Registration",
+								"65b934c324738bdb82243c03"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

@@ -21,6 +21,7 @@
   <ItemGroup>
     <Folder Include="DBScripts\" />
     <Folder Include="Datenmodell\" />
+    <Folder Include="DatenbankMigration\" />
   </ItemGroup>
 
 </Project>
